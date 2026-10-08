@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>工作台 · 把日程、目标与项目放进同一张工作台</title>
+<meta name="description" content="工作台是一款 macOS 原生个人效率工作站：日程、待办、目标、项目、人生时间轴、专注与统计，内置懂你数据的 AI 助手，本地优先、零三方依赖。">
+<meta property="og:type" content="website">
+<meta property="og:title" content="工作台 · 把日程、目标与项目放进同一张工作台">
+<meta property="og:description" content="macOS 原生个人效率工作站：七大页面 + AI 助手，本地优先、零三方依赖。">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23007aff'/%3E%3Crect x='12' y='12' width='17' height='17' rx='4' fill='white'/%3E%3Crect x='35' y='12' width='17' height='17' rx='4' fill='white' opacity='.78'/%3E%3Crect x='12' y='35' width='17' height='17' rx='4' fill='white' opacity='.78'/%3E%3Crect x='35' y='35' width='17' height='17' rx='4' fill='white' opacity='.5'/%3E%3C/svg%3E">
+<script>
+/* 首帧前定主题：localStorage 优先，其次跟随系统，防白闪 */
+(function(){
+  var t = null;
+  try { t = localStorage.getItem('hp-theme'); } catch(e){}
+  if (t !== 'dark' && t !== 'light') {
+    t = window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  }
+  document.documentElement.setAttribute('data-theme', t);
+})();
+</script>
+<style>
+/* ================= Token（与 P-工作台3 tokens-base.css 同源） ================= */
+:root{
+  --bg:#eef0f4; --panel:#ffffff; --border:rgba(0,0,0,.1);
+  --text:#1d1d1f; --text2:#5d5d63; --text3:#8e8e93;
+  --primary:#007aff; --soft:#f5f5f7; --soft2:#f2f2f7;
+  --shadow:0 1px 1px rgba(0,0,0,.04), 0 6px 20px rgba(30,35,50,.08);
+  --shadow-lg:0 2px 4px rgba(0,0,0,.05), 0 28px 70px rgba(30,35,50,.18);
+  --glass:rgba(255,255,255,.72);
+  --code-bg:rgba(0,0,0,.05);
+  color-scheme:light;
+}
+html[data-theme="dark"]{
+  --bg:#141419; --panel:#232327; --border:rgba(255,255,255,.11);
+  --text:#f5f5f7; --text2:#b8b8c0; --text3:#7c7c85;
+  --primary:#0a84ff; --soft:#2a2a2f; --soft2:#2e2e34;
+  --shadow:0 1px 1px rgba(0,0,0,.3), 0 8px 28px rgba(0,0,0,.45);
+  --shadow-lg:0 2px 4px rgba(0,0,0,.4), 0 30px 80px rgba(0,0,0,.6);
+  --glass:rgba(20,20,25,.72);
+  --code-bg:rgba(255,255,255,.08);
+  color-scheme:dark;
+}
+/* ================= 基础 ================= */
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto} }
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","PingFang SC","Helvetica Neue","Microsoft YaHei",sans-serif;
+  font-size:15px;line-height:1.65;color:var(--text);background:var(--bg);
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;
+}
+::selection{background:color-mix(in srgb,var(--primary) 25%,transparent)}
+a{color:inherit;text-decoration:none}
+ul{list-style:none}
+.icon{fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;width:22px;height:22px;flex:none}
+.wrap{max-width:1120px;margin:0 auto;padding:0 28px}
+section{scroll-margin-top:76px}
+
+/* 入场动画（JS 观察器触发；reduced-motion 时直接可见） */
+.reveal{opacity:0;transform:translateY(14px);transition:opacity .55s cubic-bezier(.22,.61,.36,1),transform .55s cubic-bezier(.22,.61,.36,1)}
+.reveal.in{opacity:1;transform:none}
+@media (prefers-reduced-motion: reduce){
+  .reveal{opacity:1;transform:none;transition:none}
+  *{animation:none!important;transition:none!important}
+}
+
+/* ================= 顶部导航 ================= */
+.nav{position:fixed;top:0;left:0;right:0;height:56px;z-index:100;
+  display:flex;align-items:center;
+  border-bottom:1px solid transparent;
+  transition:background .25s,border-color .25s,backdrop-filter .25s}
+.nav.scrolled{background:var(--glass);-webkit-backdrop-filter:blur(18px) saturate(1.6);backdrop-filter:blur(18px) saturate(1.6);
+  border-bottom-color:var(--border)}
+.nav .wrap{width:100%;display:flex;align-items:center;gap:26px}
+.brand{display:flex;align-items:center;gap:9px;font-weight:700;font-size:16px;letter-spacing:-.2px}
+.brand .logo{width:26px;height:26px;border-radius:7px;background:linear-gradient(135deg,var(--primary),color-mix(in srgb,var(--primary) 55%,#7c3aed));
+  display:grid;place-items:center;color:#fff;box-shadow:0 2px 8px color-mix(in srgb,var(--primary) 35%,transparent)}
+.brand .logo .icon{width:15px;height:15px;stroke-width:2.2}
+.nav-links{display:flex;gap:4px;margin-left:auto}
+.nav-links a{font-size:13.5px;color:var(--text2);padding:7px 13px;border-radius:8px;transition:color .18s,background .18s}
+.nav-links a:hover{color:var(--text);background:var(--soft2)}
+.nav-links a.on{color:var(--primary);background:color-mix(in srgb,var(--primary) 10%,transparent)}
+.theme-btn{width:34px;height:34px;border:1px solid var(--border);border-radius:9px;background:var(--panel);color:var(--text2);
+  display:grid;place-items:center;cursor:pointer;transition:color .18s,transform .18s;flex:none}
+.theme-btn:hover{color:var(--primary);transform:translateY(-1px)}
+.theme-btn .icon{width:17px;height:17px}
+#themeBtn .i-sun{display:none}
+html[data-theme="dark"] #themeBtn .i-sun{display:block}
+html[data-theme="dark"] #themeBtn .i-moon{display:none}
+.burger{display:none;width:34px;height:34px;border:1px solid var(--border);border-radius:9px;background:var(--panel);
+  color:var(--text2);place-items:center;cursor:pointer;margin-left:8px}
+.burger .icon{width:17px;height:17px}
+
+/* ================= Hero ================= */
+.hero{position:relative;padding:158px 0 96px;overflow:hidden}
+.hero::before,.hero::after{content:'';position:absolute;border-radius:50%;filter:blur(90px);pointer-events:none}
+.hero::before{width:520px;height:520px;left:-140px;top:-120px;
+  background:color-mix(in srgb,#7c6ee0 22%,transparent)}
+.hero::after{width:460px;height:460px;right:-120px;top:60px;
+  background:color-mix(in srgb,#007aff 18%,transparent)}
+html[data-theme="dark"] .hero::before{background:color-mix(in srgb,#7c6ee0 14%,transparent)}
+html[data-theme="dark"] .hero::after{background:color-mix(in srgb,#007aff 12%,transparent)}
+.hero .wrap{position:relative;display:grid;grid-template-columns:1.02fr .98fr;gap:56px;align-items:center}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;font-weight:600;color:var(--primary);
+  background:color-mix(in srgb,var(--primary) 10%,transparent);border:1px solid color-mix(in srgb,var(--primary) 22%,transparent);
+  padding:5px 12px;border-radius:99px;margin-bottom:20px}
+.eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--primary);animation:pulse 2.4s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+.hero h1{font-size:clamp(30px,4.4vw,46px);line-height:1.22;font-weight:800;letter-spacing:-.8px}
+.hero h1 em{font-style:normal;color:var(--primary)}
+.hero .sub{margin:18px 0 26px;font-size:16.5px;color:var(--text2);max-width:46ch}
+.hero-cta{display:flex;gap:12px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:7px;font-size:14.5px;font-weight:600;padding:11px 22px;border-radius:10px;cursor:pointer;border:none;
+  transition:transform .18s,box-shadow .18s,background .18s}
+.btn-pri{background:var(--primary);color:#fff;box-shadow:0 4px 16px color-mix(in srgb,var(--primary) 35%,transparent)}
+.btn-pri:hover{transform:translateY(-1.5px);box-shadow:0 8px 24px color-mix(in srgb,var(--primary) 42%,transparent)}
+.btn-ghost{background:var(--panel);color:var(--text);border:1px solid var(--border)}
+.btn-ghost:hover{transform:translateY(-1.5px);background:var(--soft2)}
+.hero-stats{display:flex;gap:30px;margin-top:34px;flex-wrap:wrap}
+.hstat b{display:block;font-size:22px;font-weight:800;letter-spacing:-.4px;color:var(--text)}
+.hstat span{font-size:12.5px;color:var(--text3)}
+
+/* ---- Hero 实景截图窗框 ---- */
+.hero-visual{perspective:1400px}
+.shot-frame{background:var(--panel);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow-lg);
+  overflow:hidden;transform:rotateY(-6deg) rotateX(1.5deg);transition:transform .5s cubic-bezier(.22,.61,.36,1)}
+.hero-visual:hover .shot-frame{transform:rotateY(-2.5deg) rotateX(.5deg) translateY(-4px)}
+.shot-tb{display:flex;align-items:center;gap:7px;padding:11px 14px;border-bottom:1px solid var(--border);background:var(--soft)}
+.tl{width:11px;height:11px;border-radius:50%}
+.tl.r{background:#ff5f57}.tl.y{background:#febc2e}.tl.g{background:#28c840}
+.shot-title{margin-left:8px;font-size:12px;font-weight:600;color:var(--text2)}
+.shot-frame img{display:block;width:100%;height:auto}
+.win-note{text-align:center;font-size:12px;color:var(--text3);margin-top:16px}
+/* 亮暗双截图随主题切换（.shot-frame .shot-x 双类特异性须压过 .shot-frame img） */
+.shot-frame .shot-dark{display:none}
+html[data-theme="dark"] .shot-frame .shot-light{display:none}
+html[data-theme="dark"] .shot-frame .shot-dark{display:block}
+
+/* ================= 区块标题 ================= */
+.sec{padding:86px 0}
+.sec-head{max-width:640px;margin-bottom:44px}
+.sec-eyebrow{font-size:12px;font-weight:700;letter-spacing:2px;color:var(--primary);text-transform:uppercase;margin-bottom:10px}
+.sec-head h2{font-size:clamp(24px,3vw,32px);font-weight:800;letter-spacing:-.5px;line-height:1.28}
+.sec-head p{margin-top:12px;color:var(--text2);font-size:15.5px}
+
+/* ================= 功能卡 ================= */
+#pages{padding-top:60px}
+.pages-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.fcard{background:var(--panel);border:1px solid var(--border);border-radius:16px;overflow:hidden;display:flex;flex-direction:column;
+  box-shadow:var(--shadow);transition:transform .22s cubic-bezier(.22,.61,.36,1),box-shadow .22s}
+.fcard-shot{border-bottom:1px solid var(--border);background:var(--soft)}
+.fcard-shot img{display:block;width:100%;height:auto;aspect-ratio:16/10;object-fit:cover;object-position:top center} /* height:auto 释放 img height 属性，aspect-ratio 才接管 */
+.fcard-b{padding:18px 20px 20px;display:flex;flex-direction:column;flex:1}
+.fcard:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg)}
+.fcard-ic{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;color:var(--ic);
+  background:color-mix(in srgb,var(--ic) 13%,transparent);margin-bottom:14px;transition:transform .22s}
+.fcard:hover .fcard-ic{transform:rotate(-4deg) scale(1.06)}
+.fcard h3{font-size:16.5px;font-weight:700;letter-spacing:-.2px}
+.fcard .ftag{font-size:12.5px;color:var(--ic);font-weight:600;margin:2px 0 10px}
+.fcard ul{display:grid;gap:6px}
+.fcard li{font-size:13px;color:var(--text2);padding-left:14px;position:relative;line-height:1.5}
+.fcard li::before{content:'';position:absolute;left:0;top:8px;width:4.5px;height:4.5px;border-radius:50%;background:var(--ic);opacity:.75}
+.pages-more{margin-top:18px;font-size:13px;color:var(--text3)}
+.pages-more b{color:var(--text2);font-weight:600}
+
+/* ================= AI ================= */
+#ai .wrap{display:grid;grid-template-columns:1.05fr 1fr;gap:52px;align-items:center}
+.chat{background:var(--panel);border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow-lg);overflow:hidden}
+.chat-head{display:flex;align-items:center;gap:9px;padding:13px 16px;border-bottom:1px solid var(--border);background:var(--soft)}
+.chat-head .icon{width:18px;height:18px;color:#7c6ee0}
+.chat-head b{font-size:13.5px}
+.agents{margin-left:auto;display:flex;gap:6px}
+.agent{font-size:10.5px;color:var(--text2);border:1px solid var(--border);border-radius:99px;padding:2.5px 9px;
+  display:inline-flex;align-items:center;gap:5px;background:var(--panel)}
+.agent i{width:5.5px;height:5.5px;border-radius:50%}
+.agent.on{border-color:color-mix(in srgb,#7c6ee0 45%,transparent);color:var(--text);font-weight:600}
+.chat-body{padding:18px 16px;display:grid;gap:12px;min-height:238px;align-content:start}
+.msg{max-width:86%;padding:10px 14px;border-radius:14px;font-size:13.5px;line-height:1.6}
+.msg.u{background:var(--primary);color:#fff;justify-self:end;border-bottom-right-radius:5px}
+.msg.a{background:var(--soft2);justify-self:start;border-bottom-left-radius:5px}
+.msg.a ul{margin:6px 0 2px;display:grid;gap:4px}
+.msg.a li{padding-left:14px;position:relative;color:var(--text2)}
+.msg.a li::before{content:'';position:absolute;left:2px;top:9px;width:4px;height:4px;border-radius:50%;background:#7c6ee0}
+.msg.a li b{color:var(--text)}
+.chat-in{display:flex;align-items:center;gap:10px;padding:12px 14px;border-top:1px solid var(--border)}
+.chat-in .ph{flex:1;font-size:13px;color:var(--text3);background:var(--soft2);border-radius:9px;padding:8.5px 12px}
+.chat-in .send{font-size:12.5px;font-weight:600;color:#fff;background:var(--primary);border:none;border-radius:8px;padding:8px 15px;opacity:.9}
+.ai-caps{display:grid;gap:22px}
+.cap{display:flex;gap:14px}
+.cap-ic{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;color:var(--ic);flex:none;
+  background:color-mix(in srgb,var(--ic) 13%,transparent)}
+.cap-ic .icon{width:19px;height:19px}
+.cap h4{font-size:15px;font-weight:700;margin-bottom:3px;letter-spacing:-.2px}
+.cap p{font-size:13.5px;color:var(--text2)}
+
+/* ================= 架构 ================= */
+#arch{background:var(--soft);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+html[data-theme="dark"] #arch{background:#1a1a20}
+#arch .arch-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:52px;align-items:start}
+.arch-stack{display:grid;gap:0}
+.arch-layer{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:16px 18px;
+  box-shadow:var(--shadow);display:flex;gap:15px;align-items:flex-start}
+.a-lang{font-size:10px;font-weight:800;letter-spacing:1.2px;color:#fff;border-radius:7px;padding:4px 8px;flex:none;margin-top:2px}
+.arch-layer h4{font-size:15.5px;font-weight:700;letter-spacing:-.2px}
+.arch-layer .ad{font-size:13px;color:var(--text2);margin:3px 0 9px}
+.a-tags{display:flex;gap:6px;flex-wrap:wrap}
+.a-tags span{font-size:10.5px;color:var(--text3);background:var(--soft2);border-radius:6px;padding:2.5px 8px}
+.arch-link{display:flex;align-items:center;gap:12px;padding:7px 6px}
+.al-line{flex:1;border-top:1.5px dashed var(--border)}
+.al-pill{font-size:11px;color:var(--text2);background:var(--panel);border:1px solid var(--border);
+  border-radius:99px;padding:3px 12px;white-space:nowrap}
+.arch-side{display:grid;gap:14px}
+.port-card,.data-card{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:18px 20px;box-shadow:var(--shadow)}
+.port-card h4,.data-card h4{font-size:13px;font-weight:700;margin-bottom:12px;color:var(--text2)}
+.port-row{display:flex;align-items:baseline;gap:12px;padding:7px 0;border-bottom:1px solid var(--border);font-size:13px}
+.port-row:last-child{border-bottom:none}
+.port-row code{font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:12.5px;font-weight:700;color:var(--primary);
+  background:var(--code-bg);border-radius:5px;padding:1.5px 7px}
+.port-row b{font-weight:600;flex:none}
+.port-row span{color:var(--text3);font-size:12px;text-align:right;margin-left:auto}
+.data-card .dpath{font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:11.5px;background:var(--code-bg);
+  border-radius:8px;padding:9px 12px;color:var(--text2);word-break:break-all;margin-bottom:9px}
+.data-card p{font-size:12.5px;color:var(--text3)}
+
+/* ================= 工程特点 ================= */
+.traits-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.tcard{background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:22px;box-shadow:var(--shadow);
+  transition:transform .22s cubic-bezier(.22,.61,.36,1),box-shadow .22s}
+.tcard:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg)}
+.tcard-ic{width:40px;height:40px;border-radius:11px;display:grid;place-items:center;color:var(--ic);margin-bottom:13px;
+  background:color-mix(in srgb,var(--ic) 13%,transparent)}
+.tcard-ic .icon{width:19px;height:19px}
+.tcard h4{font-size:15.5px;font-weight:700;margin-bottom:6px;letter-spacing:-.2px}
+.tcard p{font-size:13.5px;color:var(--text2)}
+
+/* ================= 下载 ================= */
+.dl-card{background:var(--panel);border:1px solid var(--border);border-radius:20px;box-shadow:var(--shadow);
+  padding:40px 44px;display:grid;grid-template-columns:1fr auto;gap:28px;align-items:center}
+.dl-card h2{font-size:26px;letter-spacing:-.6px;margin-bottom:8px}
+.dl-sub{font-size:13.5px;color:var(--text2)}
+.dl-tip{font-size:12px;color:var(--text3);margin-top:12px;line-height:1.8;max-width:52ch}
+.dl-tip code{font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:11px;background:var(--code-bg);
+  border-radius:5px;padding:1.5px 6px;color:var(--text2)}
+.dl-actions{display:grid;gap:10px;min-width:230px}
+.dl-actions .btn{justify-content:center}
+.dl-meta{font-size:11.5px;color:var(--text3);text-align:center}
+@media (max-width:900px){.dl-card{grid-template-columns:1fr;padding:28px}.dl-actions{min-width:0}}
+
+/* ================= 页脚 ================= */
+footer{border-top:1px solid var(--border);padding:44px 0 52px;background:var(--soft)}
+html[data-theme="dark"] footer{background:#1a1a20}
+footer .wrap{display:flex;gap:40px;flex-wrap:wrap;align-items:flex-start}
+.f-brand{display:flex;align-items:center;gap:9px;font-weight:700;font-size:15px}
+.f-brand .logo{width:24px;height:24px;border-radius:6.5px;background:linear-gradient(135deg,var(--primary),color-mix(in srgb,var(--primary) 55%,#7c3aed));
+  display:grid;place-items:center;color:#fff}
+.f-brand .logo .icon{width:14px;height:14px;stroke-width:2.2}
+.f-note{margin-top:10px;font-size:12.5px;color:var(--text3);max-width:44ch}
+.f-docs{margin-left:auto;display:flex;gap:22px}
+.f-docs a{font-size:13px;color:var(--text2)}
+.f-docs a:hover{color:var(--primary)}
+.f-ver{flex-basis:100%;margin-top:26px;padding-top:18px;border-top:1px solid var(--border);
+  font-size:12px;color:var(--text3);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+
+/* ================= 回到顶部 ================= */
+#toTop{position:fixed;right:22px;bottom:22px;width:40px;height:40px;border-radius:12px;border:1px solid var(--border);
+  background:var(--glass);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);color:var(--text2);cursor:pointer;
+  display:grid;place-items:center;opacity:0;pointer-events:none;transform:translateY(8px);
+  transition:opacity .25s,transform .25s,color .18s;z-index:90;box-shadow:var(--shadow)}
+#toTop.show{opacity:1;pointer-events:auto;transform:none}
+#toTop:hover{color:var(--primary)}
+#toTop .icon{width:17px;height:17px}
+
+/* ================= 响应式 ================= */
+@media (max-width:1080px){
+  .pages-grid{grid-template-columns:repeat(2,1fr)}
+  .traits-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media (max-width:960px){
+  .hero{padding:128px 0 72px}
+  .hero .wrap{grid-template-columns:1fr;gap:48px}
+  .hero-visual{max-width:560px}
+  .shot-frame{transform:none}
+  .hero-visual:hover .shot-frame{transform:translateY(-3px)}
+  #ai .wrap{grid-template-columns:1fr;gap:40px}
+  #arch .arch-grid{grid-template-columns:1fr;gap:36px}
+}
+@media (max-width:880px){
+  .burger{display:grid}
+  .nav-links{position:absolute;top:60px;right:20px;flex-direction:column;gap:2px;padding:8px;
+    background:var(--glass);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);
+    border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow-lg);
+    opacity:0;pointer-events:none;transform:translateY(-6px);transition:opacity .2s,transform .2s}
+  body.menu-open .nav-links{opacity:1;pointer-events:auto;transform:none}
+  .nav-links a{padding:9px 16px}
+}
+@media (max-width:720px){
+  .wrap{padding:0 20px}
+  .pages-grid,.traits-grid{grid-template-columns:1fr}
+  .hero-stats{gap:22px}
+  .sec{padding:64px 0}
+  .agents{display:none}
+  .wm-cols{grid-template-columns:1fr 1fr}
+  .f-docs{margin-left:0}
+}
+@media (max-width:480px){
+  .wm-cols{grid-template-columns:1fr}
+  .hero-cta .btn{flex:1;justify-content:center}
+}
+</style>
+<!-- 无 JS 降级：静态区块直接可见（功能卡等数据化内容需 JS 渲染） -->
+<noscript><style>.reveal{opacity:1;transform:none}</style></noscript>
+</head>
+<body>
+
+<!-- ============ SVG 图标库（内联 sprite，零外链） ============ -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-grid" viewBox="0 0 24 24">
+      <rect x="3.2" y="3.2" width="7.4" height="7.4" rx="2.2"/>
+      <rect x="13.4" y="3.2" width="7.4" height="7.4" rx="2.2"/>
+      <rect x="3.2" y="13.4" width="7.4" height="7.4" rx="2.2"/>
+      <path d="M17.1 14.6v5M14.6 17.1h5"/>
+    </symbol>
+    <symbol id="i-cal" viewBox="0 0 24 24">
+      <rect x="3.5" y="4.8" width="17" height="16" rx="2.6"/>
+      <path d="M3.5 9.8h17M8.2 2.8v3.6M15.8 2.8v3.6"/>
+    </symbol>
+    <symbol id="i-gantt" viewBox="0 0 24 24" stroke-width="3">
+      <path d="M5 7h8.5M9.5 12h9.5M5 17h6"/>
+    </symbol>
+    <symbol id="i-target" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="8.2"/><circle cx="12" cy="12" r="4.4"/>
+      <circle cx="12" cy="12" r="1.1" fill="currentColor" stroke="none"/>
+    </symbol>
+    <symbol id="i-flower" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="2.1"/>
+      <ellipse cx="12" cy="5.8" rx="2.5" ry="3.3"/>
+      <ellipse cx="12" cy="18.2" rx="2.5" ry="3.3"/>
+      <ellipse cx="5.8" cy="12" rx="3.3" ry="2.5"/>
+      <ellipse cx="18.2" cy="12" rx="3.3" ry="2.5"/>
+    </symbol>
+    <symbol id="i-timer" viewBox="0 0 24 24">
+      <circle cx="12" cy="13.2" r="7.4"/>
+      <path d="M12 13.2V9.6M10 2.8h4M12 2.8v2.8M17.8 6.4l1.3-1.3"/>
+    </symbol>
+    <symbol id="i-chart" viewBox="0 0 24 24">
+      <path d="M4 4v15.4h16"/>
+      <path d="M9 15.5v-4.2M13 15.5V8.4M17 15.5v-2.6" stroke-width="2.4"/>
+    </symbol>
+    <symbol id="i-spark" viewBox="0 0 24 24">
+      <path d="M12 3.4l1.9 5.4 5.4 1.9-5.4 1.9-1.9 5.4-1.9-5.4-5.4-1.9 5.4-1.9z"/>
+      <path d="M18.8 15.6l.8 2.2 2.2.8-2.2.8-.8 2.2-.8-2.2-2.2-.8 2.2-.8z"/>
+    </symbol>
+    <symbol id="i-doc" viewBox="0 0 24 24">
+      <path d="M6.5 3.5h7.6l3.9 3.9v13.1h-11.5z"/>
+      <path d="M14 3.8v4h3.8M9.5 12h5.2M9.5 15.4h5.2"/>
+    </symbol>
+    <symbol id="i-users" viewBox="0 0 24 24">
+      <circle cx="8.2" cy="8.8" r="2.9"/><circle cx="16.4" cy="9.6" r="2.3"/>
+      <path d="M3.5 18.6c0-2.7 2-4.4 4.7-4.4s4.7 1.7 4.7 4.4M14.6 14.6c2.4.2 4 1.7 4 4"/>
+    </symbol>
+    <symbol id="i-db" viewBox="0 0 24 24">
+      <ellipse cx="12" cy="5.6" rx="7" ry="2.7"/>
+      <path d="M5 5.6v12.8c0 1.5 3.1 2.7 7 2.7s7-1.2 7-2.7V5.6M5 12c0 1.5 3.1 2.7 7 2.7s7-1.2 7-2.7"/>
+    </symbol>
+    <symbol id="i-box" viewBox="0 0 24 24">
+      <path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/>
+      <path d="M4 7.5l8 4.5 8-4.5M12 12v9"/>
+    </symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24">
+      <path d="M12 3l7 2.6v5.5c0 4.6-3 7.9-7 9.5-4-1.6-7-4.9-7-9.5V5.6z"/>
+      <path d="M9 11.8l2.1 2.1 3.9-4"/>
+    </symbol>
+    <symbol id="i-bak" viewBox="0 0 24 24">
+      <path d="M20 12a8 8 0 1 1-2.3-5.6M20 3.6v4.2h-4.2"/>
+      <path d="M12 8v4.4l2.8 1.7"/>
+    </symbol>
+    <symbol id="i-bell" viewBox="0 0 24 24">
+      <path d="M6.2 9.5a5.8 5.8 0 1 1 11.6 0c0 4.6 1.9 5.8 1.9 5.8H4.3s1.9-1.2 1.9-5.8z"/>
+      <path d="M10.3 19.2a1.9 1.9 0 0 0 3.4 0"/>
+    </symbol>
+    <symbol id="i-key" viewBox="0 0 24 24">
+      <path d="M9.2 9.2h5.6v5.6H9.2z"/>
+      <path d="M9.2 9.2H7.4a2.1 2.1 0 1 1 2.1-2.1v2.1zM14.8 9.2h1.8a2.1 2.1 0 1 0-2.1-2.1v2.1zM14.8 14.8h1.8a2.1 2.1 0 1 1-2.1 2.1v-2.1zM9.2 14.8H7.4a2.1 2.1 0 1 0 2.1 2.1v-2.1z"/>
+    </symbol>
+    <symbol id="i-devices" viewBox="0 0 24 24">
+      <rect x="2.8" y="4.6" width="13.2" height="9.6" rx="1.8"/>
+      <path d="M7 18.4h5.4M9.4 14.2v4"/>
+      <rect x="17.4" y="9.2" width="4" height="10.4" rx="1.4"/>
+    </symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="4"/>
+      <path d="M12 2.8v2M12 19.2v2M2.8 12h2M19.2 12h2M5.5 5.5l1.4 1.4M17.1 17.1l1.4 1.4M18.5 5.5l-1.4 1.4M6.9 17.1l-1.4 1.4"/>
+    </symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24">
+      <path d="M20.4 14.2A8.4 8.4 0 1 1 9.8 3.6a6.9 6.9 0 0 0 10.6 10.6z"/>
+    </symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+    <symbol id="i-up" viewBox="0 0 24 24"><path d="M12 19V5M5.5 11.5L12 5l6.5 6.5"/></symbol>
+    <symbol id="i-dl" viewBox="0 0 24 24"><path d="M12 4v11M6.5 9.5L12 15l5.5-5.5M4.5 19.5h15"/></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24">
+      <path d="M4.5 6.5h15M9.5 6.3V4.9c0-.7.6-1.3 1.3-1.3h2.4c.7 0 1.3.6 1.3 1.3v1.4"/>
+      <path d="M6.6 6.5l.8 12.1c.1 1.2 1.1 2.2 2.3 2.2h4.6c1.2 0 2.2-1 2.3-2.2l.8-12.1"/>
+      <path d="M10 10.6v5.6M14 10.6v5.6"/>
+    </symbol>
+  </defs>
+</svg>
+
+<!-- ============ 导航 ============ -->
+<header class="nav" id="nav">
+  <div class="wrap">
+    <a class="brand" href="#top">
+      <span class="logo"><svg class="icon"><use href="#i-grid"/></svg></span>工作台
+    </a>
+    <nav class="nav-links" id="navLinks">
+      <a href="#pages">功能全景</a>
+      <a href="#ai">AI 助手</a>
+      <a href="#arch">架构</a>
+      <a href="#traits">工程特点</a>
+      <a href="#download">下载</a>
+    </nav>
+    <button class="theme-btn" id="themeBtn" aria-label="切换深浅主题" title="切换主题">
+      <svg class="icon i-moon"><use href="#i-moon"/></svg>
+      <svg class="icon i-sun"><use href="#i-sun"/></svg>
+    </button>
+    <button class="burger" id="burger" aria-label="打开菜单"><svg class="icon"><use href="#i-menu"/></svg></button>
+  </div>
+</header>
+
+<main id="top">
+  <!-- ============ Hero ============ -->
+  <section class="hero">
+    <div class="wrap">
+      <div class="reveal in">
+        <span class="eyebrow"><span class="dot"></span>macOS 原生 · 个人效率工作站 · v3.8.88</span>
+        <h1>把日程、目标与项目<br>放进<em>同一张工作台</em></h1>
+        <p class="sub">工作台是一款跑在 Mac 菜单栏之外、数据只属于你的个人工作台：七大页面覆盖「今天要做什么」到「这一生想成为谁」，内置 AI 助手基于你的真实数据作答。</p>
+        <div class="hero-cta">
+          <a class="btn btn-pri" href="https://github.com/Dawnst/workbench/releases/latest" target="_blank" rel="noopener"><svg class="icon" style="width:15px;height:15px"><use href="#i-dl"/></svg>下载 App</a>
+          <a class="btn btn-ghost" href="#pages">了解功能</a>
+          <a class="btn btn-ghost" href="#arch">看看架构</a>
+        </div>
+        <div class="hero-stats">
+          <div class="hstat"><b>7</b><span>大页面</span></div>
+          <div class="hstat"><b>26</b><span>前端模块</span></div>
+          <div class="hstat"><b>0</b><span>三方依赖</span></div>
+          <div class="hstat"><b>100+</b><span>次功能迭代</span></div>
+        </div>
+      </div>
+
+      <!-- 实景截图（取自运行中的工作台，亮暗双版随主题切换） -->
+      <div class="hero-visual reveal in">
+        <div class="shot-frame">
+          <div class="shot-tb">
+            <span class="tl r"></span><span class="tl y"></span><span class="tl g"></span>
+            <span class="shot-title">工作台 · 总览</span>
+          </div>
+          <img class="shot-light" src="assets/shot-overview.png" width="1280" height="800" alt="工作台总览页实景截图">
+          <img class="shot-dark" src="assets/shot-overview-dark.png" width="1280" height="800" alt="工作台总览页实景截图（暗色主题）">
+        </div>
+        <div class="win-note">总览页实景截图（虚构演示数据） · 实际数据全部保存在本机</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 七大页面 ============ -->
+  <section class="sec" id="pages">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <div class="sec-eyebrow">功能全景 · Pages</div>
+        <h2>七大页面，每件事都有归宿</h2>
+        <p>从今天的一件待办，到一生的目标节点 —— 页面各司其职，数据互相打通。</p>
+      </div>
+      <div class="pages-grid" id="pagesGrid"></div>
+      <p class="pages-more reveal">还有 <b>回收站</b>（目标 / 项目 / 行动三档软删可恢复）、<b>标签体系</b>、<b>全局搜索式快捷添加</b>、<b>亮暗主题与外观自定义</b>等系统能力贯穿其中。</p>
+    </div>
+  </section>
+
+  <!-- ============ AI ============ -->
+  <section class="sec" id="ai">
+    <div class="wrap">
+      <div class="chat reveal" aria-hidden="true">
+        <div class="chat-head">
+          <svg class="icon"><use href="#i-spark"/></svg><b>智能分析</b>
+          <div class="agents">
+            <span class="agent on"><i style="background:#7c6ee0"></i>Hermes</span>
+            <span class="agent"><i style="background:#0284C7"></i>Muse</span>
+            <span class="agent"><i style="background:#059669"></i>Sage</span>
+          </div>
+        </div>
+        <div class="chat-body">
+          <div class="msg u">帮我总结一下这一周</div>
+          <div class="msg a">
+            本周你完成 <b>23 项待办</b>、专注 <b>5.2 小时</b>，两个在研项目都有推进：
+            <ul>
+              <li><b>工作台主页</b> — PRD / UI / 技术路线与主页已交付</li>
+              <li><b>数巡管理中台</b> — 二十七期改版完成，待验收</li>
+            </ul>
+            下周三前要交标书初稿，建议周一、周二各留一段专注时间。📌
+          </div>
+        </div>
+        <div class="chat-in"><span class="ph">让 AI 给你总结吧</span><span class="send">发送</span></div>
+      </div>
+      <div>
+        <div class="sec-head reveal" style="margin-bottom:30px">
+          <div class="sec-eyebrow">AI 助手 · Assistant</div>
+          <h2>懂你数据的 AI，<br>不是通用聊天框</h2>
+        </div>
+        <div class="ai-caps" id="aiCaps"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 架构 ============ -->
+  <section class="sec" id="arch">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <div class="sec-eyebrow">架构 · Architecture</div>
+        <h2>三明治架构：原生壳 × 零构建前端 × 纯标准库服务</h2>
+        <p>每一层都选「最少依赖」的方案，换来秒级启动、离线可用与十年不过时的可维护性。</p>
+      </div>
+      <div class="arch-grid">
+        <div class="arch-stack reveal">
+          <div class="arch-layer">
+            <span class="a-lang" style="background:#F05138">SWIFT</span>
+            <div>
+              <h4>AppKit 原生壳</h4>
+              <p class="ad">原生窗口与菜单、全局快捷键、系统通知、Python 子进程守护 —— 所有「像 Mac 应用」的部分都在这层。</p>
+              <div class="a-tags"><span>WKWebView</span><span>UNNotification</span><span>Carbon HotKey</span></div>
+            </div>
+          </div>
+          <div class="arch-link"><span class="al-line"></span><span class="al-pill">WKWebView ↔ 壳层 JS Bridge</span><span class="al-line"></span></div>
+          <div class="arch-layer">
+            <span class="a-lang" style="background:#7C3AED">WEB</span>
+            <div>
+              <h4>零构建前端 · 26 个模块</h4>
+              <p class="ad">原生 JS/CSS 直接运行，无打包无框架；既是 App 内嵌页，也能被任何浏览器直接打开。</p>
+              <div class="a-tags"><span>Vanilla JS</span><span>SVG</span><span>CSS 变量主题</span></div>
+            </div>
+          </div>
+          <div class="arch-link"><span class="al-line"></span><span class="al-pill">HTTP · 127.0.0.1</span><span class="al-line"></span></div>
+          <div class="arch-layer">
+            <span class="a-lang" style="background:#059669">PYTHON</span>
+            <div>
+              <h4>wbcore 本机服务</h4>
+              <p class="ad">纯标准库实现：单文件 SQLite（WAL）、日历订阅同步、OpenAI 兼容 AI 代理、定时备份。</p>
+              <div class="a-tags"><span>sqlite3</span><span>ICS / CalDAV</span><span>AI Proxy</span><span>Zip 备份</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="arch-side reveal">
+          <div class="port-card">
+            <h4>端口族（仅本机回环）</h4>
+            <div class="port-row"><code>8383</code><b>页面 + API</b><span>被占用时自动 +3 顺延</span></div>
+            <div class="port-row"><code>8384</code><b>HTTPS ICS 订阅</b><span>macOS 日历 / iPhone</span></div>
+            <div class="port-row"><code>8385</code><b>原生通知桥</b><span>Python → Swift → 系统</span></div>
+          </div>
+          <div class="data-card">
+            <h4>数据在哪里</h4>
+            <div class="dpath">~/Library/Application Support/P-Workbench3/</div>
+            <p>单文件 SQLite + zip 快照备份，本地优先、不上云；备份目录可指向 iCloud / OneDrive 同步盘。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 工程特点 ============ -->
+  <section class="sec" id="traits">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <div class="sec-eyebrow">工程特点 · Engineering</div>
+        <h2>为「用很多年」而做的决定</h2>
+      </div>
+      <div class="traits-grid" id="traitsGrid"></div>
+    </div>
+  </section>
+
+  <!-- ============ 下载 ============ -->
+  <section class="sec" id="download">
+    <div class="wrap">
+      <div class="dl-card reveal">
+        <div>
+          <div class="sec-eyebrow">下载 · Download</div>
+          <h2>在 Mac 上跑起来</h2>
+          <p class="dl-sub">Apple Silicon（M 系列）· macOS 12+ · 拖进「应用程序」即用，数据只存在你自己电脑里</p>
+          <p class="dl-tip">应用未做付费签名，首次打开若被 macOS 拦截：系统设置 → 隐私与安全性 → 点「仍要打开」；或终端执行 <code>xattr -cr /Applications/工作台3.app</code> 后正常打开，此后不再拦截。</p>
+        </div>
+        <div class="dl-actions">
+          <a class="btn btn-pri" href="https://github.com/Dawnst/workbench/releases/download/v3.8.88/工作台3-3.8.88.dmg"><svg class="icon" style="width:15px;height:15px"><use href="#i-dl"/></svg>下载 v3.8.88</a>
+          <a class="btn btn-ghost" href="https://github.com/Dawnst/workbench/releases" target="_blank" rel="noopener">历史版本</a>
+          <span class="dl-meta">DMG · 42 MB · 免费</span>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ============ 页脚 ============ -->
+<footer>
+  <div class="wrap">
+    <div>
+      <div class="f-brand"><span class="logo"><svg class="icon"><use href="#i-grid"/></svg></span>工作台</div>
+      <p class="f-note">一款把日程、目标与项目放进同一张工作台的 macOS 原生应用。本页为静态介绍站，浏览过程不产生任何网络请求。</p>
+    </div>
+    <nav class="f-docs">
+      <a href="docs/PRD.md">PRD</a>
+      <a href="docs/UI方案.md">UI 方案</a>
+      <a href="docs/技术路线.md">技术路线</a>
+      <a href="https://github.com/Dawnst/workbench" target="_blank" rel="noopener">GitHub</a>
+      <a href="https://github.com/Dawnst/workbench/releases/latest" target="_blank" rel="noopener">下载</a>
+    </nav>
+    <div class="f-ver">
+      <span>内容口径基准：工作台 v3.8.88 · 2026-10</span>
+      <span>本地优先 · 零三方依赖 · 数据不出本机</span>
+    </div>
+  </div>
+</footer>
+
+<button id="toTop" aria-label="回到顶部"><svg class="icon"><use href="#i-up"/></svg></button>
+
+<script>
+/* ================= 内容数据（功能演进时只改这里） ================= */
+const PAGES = [
+  {ic:'grid',  c:'#C026D3', name:'总览', img:'shot-overview', tag:'每天从这里开始',
+   pts:['问候语 + 8 张 KPI 指标卡，今日全貌一眼清','今日待办 / 今日日程 / 项目进展集中呈现','卡片网格可拖拽调整，AI 助手常驻侧栏']},
+  {ic:'cal',   c:'#007AFF', name:'行动', img:'shot-action', tag:'日程与待办的主战场',
+   pts:['周 / 月 / 年三档视图，快捷添加、拖拽改期','标签、重复任务、超期红显一条不落','订阅 ICS / CalDAV，外部日历自动同步']},
+  {ic:'gantt', c:'#0D9488', name:'项目', img:'shot-project', tag:'甘特图级的项目管理',
+   pts:['甘特图 + 表格双视图，列宽列序随意调','跨层级依赖、里程碑、子任务、工作日排期','项目模板一键实例化，实施进度可拖可改']},
+  {ic:'target',c:'#E11D48', name:'目标', img:'shot-goal', tag:'人生之花平衡轮',
+   pts:['多维度人生之花，目标进度沿弧生长','综合进度口径：完成特判 + 事件率均值','打卡圈与目标评分，长目标看得见每天']},
+  {ic:'flower',c:'#7C3AED', name:'人生', img:'shot-life', tag:'时间轴上的一生',
+   pts:['人生节点、纪念日、生日统一沉淀','与目标平衡轮联动，回看每个阶段','图片与备注，给重要时刻留个位置']},
+  {ic:'timer', c:'#0284C7', name:'专注', img:'shot-focus', tag:'一环一秒的沉浸计时',
+   pts:['正 / 倒计时双模式，秒针刻度拖尾','任务池环绕圆环，拖入即开始专注','趋势周报 + 当日时间轴 + 沉浸模式']},
+  {ic:'chart', c:'#CA8A04', name:'统计', img:'shot-stat', tag:'14 张卡片看清自己',
+   pts:['年度热力图：一年完成轨迹铺满一屏','项目进展 / 专注统计 / 连续达标 streak','AI 用量按日统计，token 花在哪有数']},
+];
+const AI_CAPS = [
+  {ic:'doc',     c:'#007AFF', t:'真实数据上下文', d:'每次提问注入待办、日程、项目与目标的实时快照，回答基于你的真实进度，而非泛泛而谈。'},
+  {ic:'users',   c:'#7C3AED', t:'三种智能体',     d:'Hermes 全能管家、Muse 规划参谋、Sage 复盘分析师，各司其职，一键切换。'},
+  {ic:'db',      c:'#059669', t:'长期记忆',       d:'自动从对话中蒸馏个人特征沉淀为记忆，越用越懂你；记忆清单可随时查看与编辑。'},
+  {ic:'devices', c:'#CA8A04', t:'随处唤起',       d:'总览 AI 侧栏、顶栏快问输入框、独立对话窗口三个入口，历史会话随时续聊。'},
+];
+const TRAITS = [
+  {ic:'box',    c:'#007AFF', name:'零三方依赖', d:'前端零构建零框架，服务端纯 Python 标准库 —— 双击即用，不装 Homebrew，不拉 node_modules。'},
+  {ic:'shield', c:'#059669', name:'本地优先',   d:'数据存放在本机单文件 SQLite，不上云、可离线；浏览器直开同一地址即可访问。'},
+  {ic:'bak',    c:'#CA8A04', name:'自动备份',   d:'按频率自动打 zip 快照，份数与目录可配；放进 iCloud / OneDrive 同步盘也安全。'},
+  {ic:'bell',   c:'#FF453A', name:'原生通知',   d:'系统级横幅与推迟动作（30 分钟 / 1 小时 / 明天），点通知直达对应任务详情。'},
+  {ic:'key',    c:'#7C3AED', name:'全局快捷键', d:'全局快捷键随唤随隐，App 内可录制自定义；⌘1-6 秒切页面。'},
+  {ic:'trash',  c:'#0891B2', name:'回收站防手滑', d:'目标 / 项目 / 行动三类删除进站可恢复，误删有后悔药；彻底删除才真清。'},
+];
+
+/* ================= 渲染 ================= */
+const $  = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+const icon = (n, style='') => `<svg class="icon" ${style?`style="${style}"`:''} aria-hidden="true"><use href="#i-${n}"/></svg>`;
+
+$('#pagesGrid').innerHTML = PAGES.map((p,i)=>`
+  <article class="fcard reveal" style="--ic:${p.c};transition-delay:${i*45}ms">
+    <div class="fcard-shot"><img src="assets/${p.img}.png" alt="工作台${p.name}页实景截图" loading="lazy" width="1280" height="800"></div>
+    <div class="fcard-b">
+      <div class="fcard-ic">${icon(p.ic)}</div>
+      <h3>${p.name}</h3><p class="ftag">${p.tag}</p>
+      <ul>${p.pts.map(x=>`<li>${x}</li>`).join('')}</ul>
+    </div>
+  </article>`).join('');
+
+$('#aiCaps').innerHTML = AI_CAPS.map((a,i)=>`
+  <div class="cap reveal" style="--ic:${a.c};transition-delay:${i*60}ms">
+    <div class="cap-ic">${icon(a.ic)}</div>
+    <div><h4>${a.t}</h4><p>${a.d}</p></div>
+  </div>`).join('');
+
+$('#traitsGrid').innerHTML = TRAITS.map((t,i)=>`
+  <div class="tcard reveal" style="--ic:${t.c};transition-delay:${i*45}ms">
+    <div class="tcard-ic">${icon(t.ic)}</div>
+    <h4>${t.name}</h4><p>${t.d}</p>
+  </div>`).join('');
+
+/* ================= 主题切换 ================= */
+const root = document.documentElement;
+$('#themeBtn').addEventListener('click', () => {
+  const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+  root.setAttribute('data-theme', next);
+  try { localStorage.setItem('hp-theme', next); } catch(e){}
+});
+
+/* ================= 导航滚动态 + 回到顶部 ================= */
+const nav = $('#nav'), toTop = $('#toTop');
+let ticking = false;
+addEventListener('scroll', () => {
+  if (ticking) return;
+  ticking = true;
+  requestAnimationFrame(() => {
+    const y = scrollY;
+    nav.classList.toggle('scrolled', y > 8);
+    toTop.classList.toggle('show', y > 480);
+    ticking = false;
+  });
+}, { passive: true });
+toTop.addEventListener('click', () => scrollTo({ top: 0, behavior: 'smooth' }));
+
+/* ================= 锚点高亮（区块进入视口中带时点亮导航） ================= */
+const spy = new IntersectionObserver(es => {
+  es.forEach(e => {
+    if (!e.isIntersecting) return;
+    $$('.nav-links a').forEach(a =>
+      a.classList.toggle('on', a.getAttribute('href') === '#' + e.target.id));
+  });
+}, { rootMargin: '-40% 0px -55% 0px' });
+['pages','ai','arch','traits','download'].forEach(id => spy.observe(document.getElementById(id)));
+
+/* ================= 入场动画观察器 ================= */
+const ro = new IntersectionObserver(es => {
+  es.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('in'); ro.unobserve(e.target); }
+  });
+}, { threshold: .12, rootMargin: '0px 0px -6% 0px' });
+$$('.reveal').forEach(el => ro.observe(el));
+
+/* ================= 移动端菜单 ================= */
+$('#burger').addEventListener('click', () => document.body.classList.toggle('menu-open'));
+$$('.nav-links a').forEach(a => a.addEventListener('click', () => document.body.classList.remove('menu-open')));
+</script>
+</body>
+</html>
