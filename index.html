@@ -4,10 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>MindHub · 把日程、目标与项目放进同一张工作台</title>
-<meta name="description" content="MindHub 是一款 macOS 原生个人效率工作站：日程、待办、目标、项目、人生时间轴、专注与统计，内置懂你数据的 AI 助手，支持自定义 AI 接口；本地优先，数据完全存在本机，安全可靠。">
+<meta name="description" content="MindHub 是一款 macOS / Windows 双平台个人效率工作站：日程、待办、目标、项目、人生时间轴、专注与统计，内置懂你数据的 AI 助手，支持自定义 AI 接口；本地优先，数据完全存在本机，安全可靠。">
 <meta property="og:type" content="website">
 <meta property="og:title" content="MindHub · 把日程、目标与项目放进同一张工作台">
-<meta property="og:description" content="macOS 原生个人效率工作站：七大页面 + AI 助手，本地优先、零三方依赖。">
+<meta property="og:description" content="macOS / Windows 双平台个人效率工作站：七大页面 + AI 助手，本地优先、零三方依赖。">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23007aff'/%3E%3Crect x='12' y='12' width='17' height='17' rx='4' fill='white'/%3E%3Crect x='35' y='12' width='17' height='17' rx='4' fill='white' opacity='.78'/%3E%3Crect x='12' y='35' width='17' height='17' rx='4' fill='white' opacity='.78'/%3E%3Crect x='35' y='35' width='17' height='17' rx='4' fill='white' opacity='.5'/%3E%3C/svg%3E">
 <script>
 /* 首帧前定主题：localStorage 优先，其次跟随系统，防白闪 */
@@ -437,9 +437,9 @@ footer .wrap{display:flex;gap:40px;flex-wrap:wrap;align-items:flex-start}
   <section class="hero">
     <div class="wrap">
       <div class="reveal in">
-        <span class="eyebrow"><span class="dot"></span>macOS 原生 · 个人效率工作站 · MindHub v3.8.114</span>
+        <span class="eyebrow"><span class="dot"></span>macOS / Windows 双平台 · 个人效率工作站 · MindHub v3.8.114</span>
         <h1>把日程、目标与项目<br>放进<em>同一张工作台</em></h1>
-        <p class="sub">MindHub 是一款跑在 Mac 上、数据只属于你的个人工作台：七大页面覆盖「今天要做什么」到「这一生想成为谁」，AI 助手基于你的真实数据作答，接口自定义、随意调用。</p>
+        <p class="sub">MindHub 是一款跑在 macOS 与 Windows 上、数据只属于你的个人工作台：七大页面覆盖「今天要做什么」到「这一生想成为谁」，AI 助手基于你的真实数据作答，接口自定义、随意调用。</p>
         <div class="hero-cta">
           <a class="btn btn-pri" href="https://github.com/Dawnst/MindHub/releases/latest" target="_blank" rel="noopener"><svg class="icon" style="width:15px;height:15px"><use href="#i-dl"/></svg>下载 App</a>
           <a class="btn btn-ghost" href="#pages">了解功能</a>
@@ -529,7 +529,7 @@ footer .wrap{display:flex;gap:40px;flex-wrap:wrap;align-items:flex-start}
             <span class="a-lang" style="background:#F05138">SWIFT</span>
             <div>
               <h4>AppKit 原生壳</h4>
-              <p class="ad">原生窗口与菜单、全局快捷键、系统通知、Python 子进程守护 —— 所有「像 Mac 应用」的部分都在这层。</p>
+              <p class="ad">原生窗口与菜单、全局快捷键、系统通知、Python 子进程守护 —— 所有「像原生应用」的部分都在这层。</p>
               <div class="a-tags"><span>WKWebView</span><span>UNNotification</span><span>Carbon HotKey</span></div>
             </div>
           </div>
@@ -586,14 +586,15 @@ footer .wrap{display:flex;gap:40px;flex-wrap:wrap;align-items:flex-start}
       <div class="dl-card reveal">
         <div>
           <div class="sec-eyebrow">下载 · Download</div>
-          <h2>在 Mac 上跑起来</h2>
-          <p class="dl-sub">Apple Silicon（M 系列）· macOS 12+ · 拖进「应用程序」即用，数据只存在你自己电脑里</p>
-          <p class="dl-tip">应用未做付费签名，首次打开若被 macOS 拦截：系统设置 → 隐私与安全性 → 点「仍要打开」；或终端执行 <code>xattr -cr /Applications/MindHub.app</code> 后正常打开，此后不再拦截。</p>
+          <h2>双平台，下载即用</h2>
+          <p class="dl-sub">macOS（Apple Silicon · macOS 12+）与 Windows（64 位）双平台安装包 · 数据只存在你自己的电脑里</p>
+          <p class="dl-tip">应用未做付费签名。macOS 首次打开若被拦截：系统设置 → 隐私与安全性 → 点「仍要打开」，或终端执行 <code>xattr -cr /Applications/MindHub.app</code>；Windows 首次运行若被 SmartScreen 拦截：点「更多信息」→「仍要运行」。</p>
         </div>
         <div class="dl-actions">
-          <a class="btn btn-pri" href="https://github.com/Dawnst/MindHub/releases/download/v3.8.114/MindHub-v3.8.114-mac.dmg"><svg class="icon" style="width:15px;height:15px"><use href="#i-dl"/></svg>下载 MindHub v3.8.114</a>
+          <a class="btn btn-pri" href="https://github.com/Dawnst/MindHub/releases/download/v3.8.114/MindHub-v3.8.114-mac.dmg"><svg class="icon" style="width:15px;height:15px"><use href="#i-dl"/></svg>macOS 下载 · DMG</a>
+          <a class="btn btn-pri" href="https://github.com/Dawnst/MindHub/releases/download/v3.8.114/MindHub-Setup-3.8.114.exe"><svg class="icon" style="width:15px;height:15px"><use href="#i-dl"/></svg>Windows 下载 · 安装包</a>
           <a class="btn btn-ghost" href="https://github.com/Dawnst/MindHub/releases" target="_blank" rel="noopener">历史版本</a>
-          <span class="dl-meta">DMG · 42 MB · 免费</span>
+          <span class="dl-meta">DMG 42 MB · EXE 28 MB · 免费</span>
         </div>
       </div>
     </div>
@@ -605,7 +606,7 @@ footer .wrap{display:flex;gap:40px;flex-wrap:wrap;align-items:flex-start}
   <div class="wrap">
     <div>
       <div class="f-brand"><span class="logo"><svg class="icon"><use href="#i-grid"/></svg></span>MindHub</div>
-      <p class="f-note">一款把日程、目标与项目放进同一张工作台的 macOS 原生应用。本页为静态介绍站，浏览过程不产生任何网络请求。</p>
+      <p class="f-note">一款把日程、目标与项目放进同一张工作台的 macOS / Windows 双平台应用。本页为静态介绍站，浏览过程不产生任何网络请求。</p>
     </div>
     <nav class="f-docs">
       <a href="docs/PRD.md">PRD</a>
@@ -648,7 +649,7 @@ const AI_CAPS = [
   {ic:'devices', c:'#CA8A04', t:'随处唤起',       d:'总览 AI 侧栏、顶栏快问输入框、独立对话窗口三个入口，历史会话随时续聊。'},
 ];
 const TRAITS = [
-  {ic:'shield', c:'#059669', name:'本地优先 · 数据完全在本地', d:'所有数据存在你 Mac 上的单文件 SQLite：不上云、不采集、离线可用，谁也拿不走 —— 安全可靠，尽在掌握。'},
+  {ic:'shield', c:'#059669', name:'本地优先 · 数据完全在本地', d:'所有数据存在你电脑上的单文件 SQLite：不上云、不采集、离线可用，谁也拿不走 —— 安全可靠，尽在掌握。'},
   {ic:'bak',    c:'#CA8A04', name:'自动备份',   d:'按频率自动打 zip 快照，保留份数与目录可配；放进 iCloud / OneDrive 同步盘，轻松获得异地容灾。'},
   {ic:'box',    c:'#007AFF', name:'零三方依赖', d:'前端零构建零框架，服务端纯 Python 标准库 —— 双击即用，不装 Homebrew，不拉 node_modules。'},
   {ic:'bell',   c:'#FF453A', name:'提醒横幅',   d:'App 内自绘提醒横幅：应用 logo + 推迟四档（30 分钟 / 1 小时 / 明天），点横幅直达对应任务详情。'},

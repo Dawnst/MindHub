@@ -1,6 +1,6 @@
 # MindHub · 主页
 
-> **MindHub** —— 一款 macOS 原生个人工作台的**产品介绍主页** —— 日程 · 待办 · 目标 · 项目 · 人生时间轴 · 专注 · 统计 + AI 助手。
+> **MindHub** —— 一款 macOS / Windows 双平台个人工作台的**产品介绍主页** —— 日程 · 待办 · 目标 · 项目 · 人生时间轴 · 专注 · 统计 + AI 助手。
 
 [![下载](https://img.shields.io/github/v/release/Dawnst/MindHub?label=%E4%B8%8B%E8%BD%BD&sort=semver)](https://github.com/Dawnst/MindHub/releases/latest)
 
@@ -8,12 +8,12 @@
 
 ## 下载 App
 
-**[→ 前往 Releases 下载最新版](https://github.com/Dawnst/MindHub/releases/latest)**（Apple Silicon · macOS 12+）。
-首次打开被 macOS 拦截属正常现象（未付费签名）：系统设置 → 隐私与安全性 → 「仍要打开」。
+**[→ 前往 Releases 下载最新版](https://github.com/Dawnst/MindHub/releases/latest)**（macOS：Apple Silicon · macOS 12+；Windows：64 位）。
+未付费签名，首次打开被拦截属正常现象：macOS 在 系统设置 → 隐私与安全性 → 「仍要打开」；Windows 在 SmartScreen 弹窗点「更多信息」→「仍要运行」。
 
 ## 这是什么
 
-MindHub 是一款跑在 Mac 上的原生个人效率应用（App 本体不在本仓库），本仓库是它的介绍主页，内容全部对齐 App 实际功能：
+MindHub 是一款跑在 macOS 与 Windows 上的个人效率应用（App 本体不在本仓库），本仓库是它的介绍主页，内容全部对齐 App 实际功能：
 
 - **七大页面全景** —— 总览 / 行动 / 项目 / 目标 / 人生 / 专注 / 统计，每页配运行实景截图
 - **AI 助手** —— 基于真实数据上下文作答，支持自定义 AI 接口（OpenAI 兼容），长期记忆
