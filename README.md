@@ -2,13 +2,13 @@
 
 > **MindHub** —— 一款 macOS 原生个人工作台的**产品介绍主页** —— 日程 · 待办 · 目标 · 项目 · 人生时间轴 · 专注 · 统计 + AI 助手。
 
-[![下载](https://img.shields.io/github/v/release/Dawnst/workbench?label=%E4%B8%8B%E8%BD%BD&sort=semver)](https://github.com/Dawnst/workbench/releases/latest)
+[![下载](https://img.shields.io/github/v/release/Dawnst/MindHub?label=%E4%B8%8B%E8%BD%BD&sort=semver)](https://github.com/Dawnst/MindHub/releases/latest)
 
 ![MindHub 总览](assets/shot-overview.png)
 
 ## 下载 App
 
-**[→ 前往 Releases 下载最新版](https://github.com/Dawnst/workbench/releases/latest)**（Apple Silicon · macOS 12+）。
+**[→ 前往 Releases 下载最新版](https://github.com/Dawnst/MindHub/releases/latest)**（Apple Silicon · macOS 12+）。
 首次打开被 macOS 拦截属正常现象（未付费签名）：系统设置 → 隐私与安全性 → 「仍要打开」。
 
 ## 这是什么
