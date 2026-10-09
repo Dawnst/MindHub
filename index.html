@@ -434,7 +434,7 @@ footer .wrap{display:flex;gap:40px;flex-wrap:wrap;align-items:flex-start}
   <section class="hero">
     <div class="wrap">
       <div class="reveal in">
-        <span class="eyebrow"><span class="dot"></span>macOS 原生 · 个人效率工作站 · v3.8.88</span>
+        <span class="eyebrow"><span class="dot"></span>macOS 原生 · 个人效率工作站 · v3.8.108</span>
         <h1>把日程、目标与项目<br>放进<em>同一张工作台</em></h1>
         <p class="sub">工作台是一款跑在 Mac 菜单栏之外、数据只属于你的个人工作台：七大页面覆盖「今天要做什么」到「这一生想成为谁」，内置 AI 助手基于你的真实数据作答。</p>
         <div class="hero-cta">
@@ -589,7 +589,7 @@ footer .wrap{display:flex;gap:40px;flex-wrap:wrap;align-items:flex-start}
           <p class="dl-tip">应用未做付费签名，首次打开若被 macOS 拦截：系统设置 → 隐私与安全性 → 点「仍要打开」；或终端执行 <code>xattr -cr /Applications/工作台3.app</code> 后正常打开，此后不再拦截。</p>
         </div>
         <div class="dl-actions">
-          <a class="btn btn-pri" href="https://github.com/Dawnst/workbench/releases/download/v3.8.88/workbench3-v3.8.88-mac.dmg"><svg class="icon" style="width:15px;height:15px"><use href="#i-dl"/></svg>下载 v3.8.88</a>
+          <a class="btn btn-pri" href="https://github.com/Dawnst/workbench/releases/download/v3.8.108/workbench3-v3.8.108-mac.dmg"><svg class="icon" style="width:15px;height:15px"><use href="#i-dl"/></svg>下载 v3.8.108</a>
           <a class="btn btn-ghost" href="https://github.com/Dawnst/workbench/releases" target="_blank" rel="noopener">历史版本</a>
           <span class="dl-meta">DMG · 42 MB · 免费</span>
         </div>
@@ -613,7 +613,7 @@ footer .wrap{display:flex;gap:40px;flex-wrap:wrap;align-items:flex-start}
       <a href="https://github.com/Dawnst/workbench/releases/latest" target="_blank" rel="noopener">下载</a>
     </nav>
     <div class="f-ver">
-      <span>内容口径基准：工作台 v3.8.88 · 2026-10</span>
+      <span>内容口径基准：工作台 v3.8.108 · 2026-10</span>
       <span>本地优先 · 零三方依赖 · 数据不出本机</span>
     </div>
   </div>
@@ -625,19 +625,19 @@ footer .wrap{display:flex;gap:40px;flex-wrap:wrap;align-items:flex-start}
 /* ================= 内容数据（功能演进时只改这里） ================= */
 const PAGES = [
   {ic:'grid',  c:'#C026D3', name:'总览', img:'shot-overview', tag:'每天从这里开始',
-   pts:['问候语 + 8 张 KPI 指标卡，今日全貌一眼清','今日待办 / 今日日程 / 项目进展集中呈现','卡片网格可拖拽调整，AI 助手常驻侧栏']},
+   pts:['问候语 + 8 张 KPI 指标卡，今日全貌一眼清','目标看板 · 项目进展 · 今日待办 · 今日日程四卡集中呈现','分栏宽度可拖记忆，AI 助手常驻侧栏']},
   {ic:'cal',   c:'#007AFF', name:'行动', img:'shot-action', tag:'日程与待办的主战场',
    pts:['周 / 月 / 年三档视图，快捷添加、拖拽改期','标签、重复任务、超期红显一条不落','订阅 ICS / CalDAV，外部日历自动同步']},
   {ic:'gantt', c:'#0D9488', name:'项目', img:'shot-project', tag:'甘特图级的项目管理',
    pts:['甘特图 + 表格双视图，列宽列序随意调','跨层级依赖、里程碑、子任务、工作日排期','项目模板一键实例化，实施进度可拖可改']},
   {ic:'target',c:'#E11D48', name:'目标', img:'shot-goal', tag:'人生之花平衡轮',
-   pts:['多维度人生之花，目标进度沿弧生长','综合进度口径：完成特判 + 事件率均值','打卡圈与目标评分，长目标看得见每天']},
+   pts:['多维度人生之花，目标进度沿弧生长','月历打卡按子任务分色，‹ › 翻月回看坚持轨迹','数值趋势附理论进度参照线，快慢节奏一目了然']},
   {ic:'flower',c:'#7C3AED', name:'人生', img:'shot-life', tag:'时间轴上的一生',
    pts:['人生节点、纪念日、生日统一沉淀','与目标平衡轮联动，回看每个阶段','图片与备注，给重要时刻留个位置']},
   {ic:'timer', c:'#0284C7', name:'专注', img:'shot-focus', tag:'一环一秒的沉浸计时',
    pts:['正 / 倒计时双模式，秒针刻度拖尾','任务池环绕圆环，拖入即开始专注','趋势周报 + 当日时间轴 + 沉浸模式']},
-  {ic:'chart', c:'#CA8A04', name:'统计', img:'shot-stat', tag:'14 张卡片看清自己',
-   pts:['年度热力图：一年完成轨迹铺满一屏','项目进展 / 专注统计 / 连续达标 streak','AI 用量按日统计，token 花在哪有数']},
+  {ic:'chart', c:'#CA8A04', name:'统计', img:'shot-stat', tag:'七个区块看清自己',
+   pts:['完成趋势近 30 天：柱状 + 均线 + 行动状态建议','年度热力图：一年完成轨迹铺满一屏','项目 / 目标进度汇总，专注与 AI 用量有数']},
 ];
 const AI_CAPS = [
   {ic:'doc',     c:'#007AFF', t:'真实数据上下文', d:'每次提问注入待办、日程、项目与目标的实时快照，回答基于你的真实进度，而非泛泛而谈。'},
@@ -649,7 +649,7 @@ const TRAITS = [
   {ic:'box',    c:'#007AFF', name:'零三方依赖', d:'前端零构建零框架，服务端纯 Python 标准库 —— 双击即用，不装 Homebrew，不拉 node_modules。'},
   {ic:'shield', c:'#059669', name:'本地优先',   d:'数据存放在本机单文件 SQLite，不上云、可离线；浏览器直开同一地址即可访问。'},
   {ic:'bak',    c:'#CA8A04', name:'自动备份',   d:'按频率自动打 zip 快照，份数与目录可配；放进 iCloud / OneDrive 同步盘也安全。'},
-  {ic:'bell',   c:'#FF453A', name:'原生通知',   d:'系统级横幅与推迟动作（30 分钟 / 1 小时 / 明天），点通知直达对应任务详情。'},
+  {ic:'bell',   c:'#FF453A', name:'提醒横幅',   d:'App 内自绘提醒横幅：应用 logo + 推迟四档（30 分钟 / 1 小时 / 明天），点横幅直达对应任务详情。'},
   {ic:'key',    c:'#7C3AED', name:'全局快捷键', d:'全局快捷键随唤随隐，App 内可录制自定义；⌘1-6 秒切页面。'},
   {ic:'trash',  c:'#0891B2', name:'回收站防手滑', d:'目标 / 项目 / 行动三类删除进站可恢复，误删有后悔药；彻底删除才真清。'},
 ];
