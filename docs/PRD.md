@@ -1,7 +1,7 @@
 # PRD — 工作台主页（产品介绍站）
 
 > 版本 v1.1 · 2026-10-07 · 静态站点（index.html + 本地截图资源）
-> 上游项目：P-工作台3 · MindHub（/Applications/MindHub.app，v3.8.113）
+> 上游项目：P-工作台3 · MindHub（/Applications/MindHub.app，v3.8.114）
 
 ---
 
