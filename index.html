@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>工作台 · 把日程、目标与项目放进同一张工作台</title>
-<meta name="description" content="工作台是一款 macOS 原生个人效率工作站：日程、待办、目标、项目、人生时间轴、专注与统计，内置懂你数据的 AI 助手，本地优先、零三方依赖。">
+<title>MindHub · 把日程、目标与项目放进同一张工作台</title>
+<meta name="description" content="MindHub 是一款 macOS 原生个人效率工作站：日程、待办、目标、项目、人生时间轴、专注与统计，内置懂你数据的 AI 助手，支持自定义 AI 接口；本地优先，数据完全存在本机，安全可靠。">
 <meta property="og:type" content="website">
-<meta property="og:title" content="工作台 · 把日程、目标与项目放进同一张工作台">
+<meta property="og:title" content="MindHub · 把日程、目标与项目放进同一张工作台">
 <meta property="og:description" content="macOS 原生个人效率工作站：七大页面 + AI 助手，本地优先、零三方依赖。">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23007aff'/%3E%3Crect x='12' y='12' width='17' height='17' rx='4' fill='white'/%3E%3Crect x='35' y='12' width='17' height='17' rx='4' fill='white' opacity='.78'/%3E%3Crect x='12' y='35' width='17' height='17' rx='4' fill='white' opacity='.78'/%3E%3Crect x='35' y='35' width='17' height='17' rx='4' fill='white' opacity='.5'/%3E%3C/svg%3E">
 <script>
@@ -147,21 +147,22 @@ html[data-theme="dark"] .shot-frame .shot-dark{display:block}
 
 /* ================= 功能卡 ================= */
 #pages{padding-top:60px}
-.pages-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
-.fcard{background:var(--panel);border:1px solid var(--border);border-radius:16px;overflow:hidden;display:flex;flex-direction:column;
-  box-shadow:var(--shadow);transition:transform .22s cubic-bezier(.22,.61,.36,1),box-shadow .22s}
-.fcard-shot{border-bottom:1px solid var(--border);background:var(--soft)}
-.fcard-shot img{display:block;width:100%;height:auto;aspect-ratio:16/10;object-fit:cover;object-position:top center} /* height:auto 释放 img height 属性，aspect-ratio 才接管 */
-.fcard-b{padding:18px 20px 20px;display:flex;flex-direction:column;flex:1}
-.fcard:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg)}
-.fcard-ic{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;color:var(--ic);
-  background:color-mix(in srgb,var(--ic) 13%,transparent);margin-bottom:14px;transition:transform .22s}
-.fcard:hover .fcard-ic{transform:rotate(-4deg) scale(1.06)}
-.fcard h3{font-size:16.5px;font-weight:700;letter-spacing:-.2px}
-.fcard .ftag{font-size:12.5px;color:var(--ic);font-weight:600;margin:2px 0 10px}
-.fcard ul{display:grid;gap:6px}
-.fcard li{font-size:13px;color:var(--text2);padding-left:14px;position:relative;line-height:1.5}
-.fcard li::before{content:'';position:absolute;left:0;top:8px;width:4.5px;height:4.5px;border-radius:50%;background:var(--ic);opacity:.75}
+.mrows{display:grid;gap:26px}
+.mrow{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:34px;align-items:center;
+  background:var(--panel);border:1px solid var(--border);border-radius:20px;padding:26px;box-shadow:var(--shadow);
+  transition:transform .22s cubic-bezier(.22,.61,.36,1),box-shadow .22s}
+.mrow:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg)}
+.mrow-shot{border-radius:12px;overflow:hidden;border:1px solid var(--border);background:var(--soft);box-shadow:var(--shadow)}
+.mrow-shot img{display:block;width:100%;height:auto} /* height:auto 释放 img height 属性，整图无裁切可读 */
+.mrow-b{padding:6px 4px}
+.mrow-ic{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;color:var(--ic);
+  background:color-mix(in srgb,var(--ic) 13%,transparent);margin-bottom:12px;transition:transform .22s}
+.mrow:hover .mrow-ic{transform:rotate(-4deg) scale(1.06)}
+.mrow h3{font-size:19px;font-weight:800;letter-spacing:-.2px}
+.mrow .ftag{font-size:13px;color:var(--ic);font-weight:600;margin:3px 0 12px}
+.mrow ul{display:grid;gap:8px}
+.mrow li{font-size:13.5px;color:var(--text2);padding-left:15px;position:relative;line-height:1.55}
+.mrow li::before{content:'';position:absolute;left:0;top:8px;width:5px;height:5px;border-radius:50%;background:var(--ic);opacity:.75}
 .pages-more{margin-top:18px;font-size:13px;color:var(--text3)}
 .pages-more b{color:var(--text2);font-weight:600}
 
@@ -274,7 +275,8 @@ footer .wrap{display:flex;gap:40px;flex-wrap:wrap;align-items:flex-start}
 
 /* ================= 响应式 ================= */
 @media (max-width:1080px){
-  .pages-grid{grid-template-columns:repeat(2,1fr)}
+  .mrow{grid-template-columns:1fr;gap:20px;padding:20px}
+  .mrow-b{padding:0}
   .traits-grid{grid-template-columns:repeat(2,1fr)}
 }
 @media (max-width:960px){
@@ -412,7 +414,7 @@ footer .wrap{display:flex;gap:40px;flex-wrap:wrap;align-items:flex-start}
 <header class="nav" id="nav">
   <div class="wrap">
     <a class="brand" href="#top">
-      <span class="logo"><svg class="icon"><use href="#i-grid"/></svg></span>工作台
+      <span class="logo"><svg class="icon"><use href="#i-grid"/></svg></span>MindHub
     </a>
     <nav class="nav-links" id="navLinks">
       <a href="#pages">功能全景</a>
@@ -420,6 +422,7 @@ footer .wrap{display:flex;gap:40px;flex-wrap:wrap;align-items:flex-start}
       <a href="#arch">架构</a>
       <a href="#traits">工程特点</a>
       <a href="#download">下载</a>
+      <a href="https://github.com/Dawnst/workbench" target="_blank" rel="noopener">GitHub</a>
     </nav>
     <button class="theme-btn" id="themeBtn" aria-label="切换深浅主题" title="切换主题">
       <svg class="icon i-moon"><use href="#i-moon"/></svg>
@@ -434,9 +437,9 @@ footer .wrap{display:flex;gap:40px;flex-wrap:wrap;align-items:flex-start}
   <section class="hero">
     <div class="wrap">
       <div class="reveal in">
-        <span class="eyebrow"><span class="dot"></span>macOS 原生 · 个人效率工作站 · v3.8.108</span>
+        <span class="eyebrow"><span class="dot"></span>macOS 原生 · 个人效率工作站 · MindHub v3.8.110</span>
         <h1>把日程、目标与项目<br>放进<em>同一张工作台</em></h1>
-        <p class="sub">工作台是一款跑在 Mac 菜单栏之外、数据只属于你的个人工作台：七大页面覆盖「今天要做什么」到「这一生想成为谁」，内置 AI 助手基于你的真实数据作答。</p>
+        <p class="sub">MindHub 是一款跑在 Mac 上、数据只属于你的个人工作台：七大页面覆盖「今天要做什么」到「这一生想成为谁」，AI 助手基于你的真实数据作答，接口自定义、随意调用。</p>
         <div class="hero-cta">
           <a class="btn btn-pri" href="https://github.com/Dawnst/workbench/releases/latest" target="_blank" rel="noopener"><svg class="icon" style="width:15px;height:15px"><use href="#i-dl"/></svg>下载 App</a>
           <a class="btn btn-ghost" href="#pages">了解功能</a>
@@ -446,7 +449,7 @@ footer .wrap{display:flex;gap:40px;flex-wrap:wrap;align-items:flex-start}
           <div class="hstat"><b>7</b><span>大页面</span></div>
           <div class="hstat"><b>26</b><span>前端模块</span></div>
           <div class="hstat"><b>0</b><span>三方依赖</span></div>
-          <div class="hstat"><b>100+</b><span>次功能迭代</span></div>
+          <div class="hstat"><b>110+</b><span>次功能迭代</span></div>
         </div>
       </div>
 
@@ -455,10 +458,10 @@ footer .wrap{display:flex;gap:40px;flex-wrap:wrap;align-items:flex-start}
         <div class="shot-frame">
           <div class="shot-tb">
             <span class="tl r"></span><span class="tl y"></span><span class="tl g"></span>
-            <span class="shot-title">工作台 · 总览</span>
+            <span class="shot-title">MindHub · 总览</span>
           </div>
-          <img class="shot-light" src="assets/shot-overview.png" width="1280" height="800" alt="工作台总览页实景截图">
-          <img class="shot-dark" src="assets/shot-overview-dark.png" width="1280" height="800" alt="工作台总览页实景截图（暗色主题）">
+          <img class="shot-light" src="assets/shot-overview.png" width="1280" height="800" alt="MindHub 总览页实景截图">
+          <img class="shot-dark" src="assets/shot-overview-dark.png" width="1280" height="800" alt="MindHub 总览页实景截图（暗色主题）">
         </div>
         <div class="win-note">总览页实景截图（虚构演示数据） · 实际数据全部保存在本机</div>
       </div>
@@ -473,7 +476,7 @@ footer .wrap{display:flex;gap:40px;flex-wrap:wrap;align-items:flex-start}
         <h2>七大页面，每件事都有归宿</h2>
         <p>从今天的一件待办，到一生的目标节点 —— 页面各司其职，数据互相打通。</p>
       </div>
-      <div class="pages-grid" id="pagesGrid"></div>
+      <div class="mrows" id="pagesGrid"></div>
       <p class="pages-more reveal">还有 <b>回收站</b>（目标 / 项目 / 行动三档软删可恢复）、<b>标签体系</b>、<b>全局搜索式快捷添加</b>、<b>亮暗主题与外观自定义</b>等系统能力贯穿其中。</p>
     </div>
   </section>
@@ -486,19 +489,18 @@ footer .wrap{display:flex;gap:40px;flex-wrap:wrap;align-items:flex-start}
           <svg class="icon"><use href="#i-spark"/></svg><b>智能分析</b>
           <div class="agents">
             <span class="agent on"><i style="background:#7c6ee0"></i>Hermes</span>
-            <span class="agent"><i style="background:#0284C7"></i>Muse</span>
-            <span class="agent"><i style="background:#059669"></i>Sage</span>
+            <span class="agent"><i style="background:#0284C7"></i>自定义接口 · deepseek-chat</span>
           </div>
         </div>
         <div class="chat-body">
           <div class="msg u">帮我总结一下这一周</div>
           <div class="msg a">
-            本周你完成 <b>23 项待办</b>、专注 <b>5.2 小时</b>，两个在研项目都有推进：
+            本周你完成 <b>23 项待办</b>、专注 <b>5.2 小时</b>，两个进行中项目都有推进：
             <ul>
-              <li><b>工作台主页</b> — PRD / UI / 技术路线与主页已交付</li>
-              <li><b>数巡管理中台</b> — 二十七期改版完成，待验收</li>
+              <li><b>个人网站改版</b> — 首页开发过半，订阅功能排期中</li>
+              <li><b>厨房改造</b> — 水电改造完成，下周橱柜进场</li>
             </ul>
-            下周三前要交标书初稿，建议周一、周二各留一段专注时间。📌
+            下周三前要交「正式上线」里程碑，建议周一、周二各留一段专注时间。📌
           </div>
         </div>
         <div class="chat-in"><span class="ph">让 AI 给你总结吧</span><span class="send">发送</span></div>
@@ -586,10 +588,10 @@ footer .wrap{display:flex;gap:40px;flex-wrap:wrap;align-items:flex-start}
           <div class="sec-eyebrow">下载 · Download</div>
           <h2>在 Mac 上跑起来</h2>
           <p class="dl-sub">Apple Silicon（M 系列）· macOS 12+ · 拖进「应用程序」即用，数据只存在你自己电脑里</p>
-          <p class="dl-tip">应用未做付费签名，首次打开若被 macOS 拦截：系统设置 → 隐私与安全性 → 点「仍要打开」；或终端执行 <code>xattr -cr /Applications/工作台3.app</code> 后正常打开，此后不再拦截。</p>
+          <p class="dl-tip">应用未做付费签名，首次打开若被 macOS 拦截：系统设置 → 隐私与安全性 → 点「仍要打开」；或终端执行 <code>xattr -cr /Applications/MindHub.app</code> 后正常打开，此后不再拦截。</p>
         </div>
         <div class="dl-actions">
-          <a class="btn btn-pri" href="https://github.com/Dawnst/workbench/releases/download/v3.8.108/workbench3-v3.8.108-mac.dmg"><svg class="icon" style="width:15px;height:15px"><use href="#i-dl"/></svg>下载 v3.8.108</a>
+          <a class="btn btn-pri" href="https://github.com/Dawnst/workbench/releases/download/v3.8.110/MindHub-v3.8.110-mac.dmg"><svg class="icon" style="width:15px;height:15px"><use href="#i-dl"/></svg>下载 MindHub v3.8.110</a>
           <a class="btn btn-ghost" href="https://github.com/Dawnst/workbench/releases" target="_blank" rel="noopener">历史版本</a>
           <span class="dl-meta">DMG · 42 MB · 免费</span>
         </div>
@@ -602,7 +604,7 @@ footer .wrap{display:flex;gap:40px;flex-wrap:wrap;align-items:flex-start}
 <footer>
   <div class="wrap">
     <div>
-      <div class="f-brand"><span class="logo"><svg class="icon"><use href="#i-grid"/></svg></span>工作台</div>
+      <div class="f-brand"><span class="logo"><svg class="icon"><use href="#i-grid"/></svg></span>MindHub</div>
       <p class="f-note">一款把日程、目标与项目放进同一张工作台的 macOS 原生应用。本页为静态介绍站，浏览过程不产生任何网络请求。</p>
     </div>
     <nav class="f-docs">
@@ -613,7 +615,7 @@ footer .wrap{display:flex;gap:40px;flex-wrap:wrap;align-items:flex-start}
       <a href="https://github.com/Dawnst/workbench/releases/latest" target="_blank" rel="noopener">下载</a>
     </nav>
     <div class="f-ver">
-      <span>内容口径基准：工作台 v3.8.108 · 2026-10</span>
+      <span>内容口径基准：MindHub v3.8.110 · 2026-10</span>
       <span>本地优先 · 零三方依赖 · 数据不出本机</span>
     </div>
   </div>
@@ -641,14 +643,14 @@ const PAGES = [
 ];
 const AI_CAPS = [
   {ic:'doc',     c:'#007AFF', t:'真实数据上下文', d:'每次提问注入待办、日程、项目与目标的实时快照，回答基于你的真实进度，而非泛泛而谈。'},
-  {ic:'users',   c:'#7C3AED', t:'三种智能体',     d:'Hermes 全能管家、Muse 规划参谋、Sage 复盘分析师，各司其职，一键切换。'},
+  {ic:'key',     c:'#7C3AED', t:'自定义 AI 接口', d:'OpenAI 兼容接口随意接：Base URL、API Key、模型名全部自己填 —— DeepSeek、通义、Kimi 乃至本地模型，想用哪个用哪个。'},
   {ic:'db',      c:'#059669', t:'长期记忆',       d:'自动从对话中蒸馏个人特征沉淀为记忆，越用越懂你；记忆清单可随时查看与编辑。'},
   {ic:'devices', c:'#CA8A04', t:'随处唤起',       d:'总览 AI 侧栏、顶栏快问输入框、独立对话窗口三个入口，历史会话随时续聊。'},
 ];
 const TRAITS = [
+  {ic:'shield', c:'#059669', name:'本地优先 · 数据完全在本地', d:'所有数据存在你 Mac 上的单文件 SQLite：不上云、不采集、离线可用，谁也拿不走 —— 安全可靠，尽在掌握。'},
+  {ic:'bak',    c:'#CA8A04', name:'自动备份',   d:'按频率自动打 zip 快照，保留份数与目录可配；放进 iCloud / OneDrive 同步盘，轻松获得异地容灾。'},
   {ic:'box',    c:'#007AFF', name:'零三方依赖', d:'前端零构建零框架，服务端纯 Python 标准库 —— 双击即用，不装 Homebrew，不拉 node_modules。'},
-  {ic:'shield', c:'#059669', name:'本地优先',   d:'数据存放在本机单文件 SQLite，不上云、可离线；浏览器直开同一地址即可访问。'},
-  {ic:'bak',    c:'#CA8A04', name:'自动备份',   d:'按频率自动打 zip 快照，份数与目录可配；放进 iCloud / OneDrive 同步盘也安全。'},
   {ic:'bell',   c:'#FF453A', name:'提醒横幅',   d:'App 内自绘提醒横幅：应用 logo + 推迟四档（30 分钟 / 1 小时 / 明天），点横幅直达对应任务详情。'},
   {ic:'key',    c:'#7C3AED', name:'全局快捷键', d:'全局快捷键随唤随隐，App 内可录制自定义；⌘1-6 秒切页面。'},
   {ic:'trash',  c:'#0891B2', name:'回收站防手滑', d:'目标 / 项目 / 行动三类删除进站可恢复，误删有后悔药；彻底删除才真清。'},
@@ -660,10 +662,10 @@ const $$ = s => [...document.querySelectorAll(s)];
 const icon = (n, style='') => `<svg class="icon" ${style?`style="${style}"`:''} aria-hidden="true"><use href="#i-${n}"/></svg>`;
 
 $('#pagesGrid').innerHTML = PAGES.map((p,i)=>`
-  <article class="fcard reveal" style="--ic:${p.c};transition-delay:${i*45}ms">
-    <div class="fcard-shot"><img src="assets/${p.img}.png" alt="工作台${p.name}页实景截图" loading="lazy" width="1280" height="800"></div>
-    <div class="fcard-b">
-      <div class="fcard-ic">${icon(p.ic)}</div>
+  <article class="mrow reveal" style="--ic:${p.c};transition-delay:${i*45}ms">
+    <div class="mrow-shot"><img src="assets/${p.img}.png" alt="MindHub${p.name}页实景截图" loading="lazy" width="1280" height="800"></div>
+    <div class="mrow-b">
+      <div class="mrow-ic">${icon(p.ic)}</div>
       <h3>${p.name}</h3><p class="ftag">${p.tag}</p>
       <ul>${p.pts.map(x=>`<li>${x}</li>`).join('')}</ul>
     </div>
