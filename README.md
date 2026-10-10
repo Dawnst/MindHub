@@ -53,7 +53,7 @@ App 大版本更新后，在仓库根目录执行：
 python3 tools/make_demo_data.py
 
 # 2. 起一次性演示实例（8392，PWB_ORPHAN_OK 免看门狗）
-cd <P-工作台3 项目根>
+cd <P-MindHub 项目根>
 PWB_ORPHAN_OK=1 python3 server/server.py --port=8392 --data-dir=/tmp/wbdemo --web-dir=web &
 
 # 3. 截图（默认连 8392，输出 assets/）
